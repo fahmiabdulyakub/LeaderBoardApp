@@ -6,7 +6,7 @@ export interface User {
   stars: number;
   subscribed: boolean;
   uid: string;
-  rank: number;
+  rank?: number;
 }
 
 export interface AppState {
