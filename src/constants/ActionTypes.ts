@@ -1,0 +1,4 @@
+export const enum ACTION_TYPES {
+  SET_USERS = 'SET_USERS',
+  SEARCH_USER = 'SEARCH_USER',
+}
