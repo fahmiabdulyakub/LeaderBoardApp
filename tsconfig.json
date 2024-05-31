@@ -12,6 +12,7 @@
       "@types": ["./src/types"],
       "@utils/*": ["./src/utils/*"],
       "@store/*": ["./src/store/*"],
+      "@store": ["./src/store"],
       "@themes": ["./src/themes"]
     },
     "esModuleInterop": true,
