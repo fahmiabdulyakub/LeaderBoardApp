@@ -1,7 +1,7 @@
 import {View} from 'react-native';
 import React from 'react';
 import styles from './styles';
-import {CommonList, Header, ModalInfo} from '@components/molecules';
+import {LeaderList, Header, ModalInfo} from '@components/molecules';
 import useHome from './hooks/useHome';
 
 const Home = () => {
@@ -21,7 +21,7 @@ const Home = () => {
         onChangeText={handleSearchInput}
         onPress={handleSearch}
       />
-      <CommonList data={topUsers} searchedUser={searchedUser} />
+      <LeaderList data={topUsers} searchedUser={searchedUser} />
       <ModalInfo
         ref={modalRef}
         text="This user name does not exist! Please specify an existing user name!"

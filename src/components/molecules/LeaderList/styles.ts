@@ -10,14 +10,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginHorizontal: 16,
-    paddingHorizontal: 8,
   },
   text: {
     fontFamily: Fonts.Inter,
     fontSize: 14,
     color: Colors.blue,
     width: 70,
+  },
+  button: {
+    backgroundColor: Colors.white,
+    flexDirection: 'row',
+    padding: 0,
   },
 });
 
