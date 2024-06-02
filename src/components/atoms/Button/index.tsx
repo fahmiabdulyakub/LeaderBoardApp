@@ -3,9 +3,11 @@ import React, {memo} from 'react';
 import styles from './styles';
 import {PropsType} from './types';
 
-const Button = ({text, textStyle, style, onPress}: PropsType) => {
+const Button = (props: PropsType) => {
+  const {text, style, textStyle, icon, ...baseProps} = props;
   return (
-    <TouchableOpacity style={[styles.container, style]} onPress={onPress}>
+    <TouchableOpacity style={[styles.container, style]} {...baseProps}>
+      {icon && icon}
       <Text style={[styles.title, textStyle]}>{text}</Text>
     </TouchableOpacity>
   );

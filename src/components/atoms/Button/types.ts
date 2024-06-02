@@ -1,8 +1,7 @@
-import {StyleProp, TextStyle, ViewStyle} from 'react-native';
+import {StyleProp, TextStyle, TouchableOpacityProps} from 'react-native';
 
-export interface PropsType {
-  text: string;
+export type PropsType = {
+  text?: string;
+  icon?: JSX.Element;
   textStyle?: StyleProp<TextStyle>;
-  style?: StyleProp<ViewStyle>;
-  onPress: () => void;
-}
+} & TouchableOpacityProps;
