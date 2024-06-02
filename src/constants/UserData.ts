@@ -1,5 +1,7 @@
 import {User} from '@types';
 
+export const LabelNames: Array<string> = ['Name', 'Rank', 'Number of bananas'];
+
 export const UserData: Record<string, User> = {
   y00D1LA8puAa1GINkVpfgC1TmO0m1: {
     bananas: 200,
