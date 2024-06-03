@@ -3,7 +3,7 @@ import {User} from '@types';
 
 interface SetUsersAction {
   type: ACTION_TYPES.SET_USERS;
-  users: Record<string, User>;
+  users: User[];
 }
 
 interface SearchUserAction {
@@ -13,7 +13,7 @@ interface SearchUserAction {
 
 export type UserActions = SetUsersAction | SearchUserAction;
 
-export const setUsers = (users: Record<string, User>): SetUsersAction => ({
+export const setUsers = (users: User[]): SetUsersAction => ({
   type: ACTION_TYPES.SET_USERS,
   users,
 });

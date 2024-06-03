@@ -3,7 +3,7 @@ import {UserActions} from './actions';
 import {AppState} from '@types';
 
 const initialState: AppState = {
-  users: {},
+  users: [],
   searchedUser: null,
 };
 
