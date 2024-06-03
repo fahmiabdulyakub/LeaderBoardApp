@@ -12,6 +12,7 @@ const Home = () => {
     searchQuery,
     handleSearch,
     handleSearchInput,
+    handleSortList,
   } = useHome();
 
   return (
@@ -21,7 +22,11 @@ const Home = () => {
         onChangeText={handleSearchInput}
         onPress={handleSearch}
       />
-      <LeaderList data={topUsers} searchedUser={searchedUser} />
+      <LeaderList
+        data={topUsers}
+        searchedUser={searchedUser}
+        onLabelPress={handleSortList}
+      />
       <ModalInfo
         ref={modalRef}
         text="This user name does not exist! Please specify an existing user name!"

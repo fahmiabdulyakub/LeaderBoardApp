@@ -1,18 +1,20 @@
 import {View} from 'react-native';
-import React, {memo, useCallback} from 'react';
+import React, {memo, useCallback, useRef} from 'react';
 import styles from './styles';
 import {FlatList} from 'react-native-gesture-handler';
 import {User} from '@types';
 import {Button, Card} from '@components/atoms';
 import {ICFilter} from '@assets/icons';
-import {LabelNames} from '@constants/UserData';
+import {LABELS_DATA, LABEL_NAMES} from '@constants/LabelData';
 
 interface PropsType {
   data: User[];
   searchedUser: string | null;
+  onLabelPress: (label: LABELS_DATA) => void;
 }
 
-const LeaderList = ({data, searchedUser}: PropsType) => {
+const LeaderList = ({data, searchedUser, onLabelPress}: PropsType) => {
+  const listRef = useRef<FlatList>(null);
   const keyExtractor = useCallback((item: User) => item.uid, []);
 
   const renderItem = useCallback(
@@ -34,34 +36,41 @@ const LeaderList = ({data, searchedUser}: PropsType) => {
   const renderLabel = useCallback(() => {
     return (
       <View style={styles.titleContainer}>
-        {LabelNames.map((item, index) => {
+        {LABEL_NAMES.map((item, index) => {
+          const onPress = () => {
+            onLabelPress(item);
+            listRef.current?.scrollToOffset({animated: true, offset: 1});
+          };
           return (
             <Button
               key={index}
               text={item}
               textStyle={styles.text}
               style={styles.button}
-              icon={<ICFilter />}
+              icon={
+                item !== LABELS_DATA.NUMBER_BANANAS ? <ICFilter /> : undefined
+              }
+              disabled={item === LABELS_DATA.NUMBER_BANANAS}
+              onPress={onPress}
             />
           );
         })}
       </View>
     );
-  }, []);
+  }, [onLabelPress]);
 
   return (
-    <FlatList
-      style={styles.container}
-      ListHeaderComponent={renderLabel}
-      showsVerticalScrollIndicator={false}
-      keyExtractor={keyExtractor}
-      data={data}
-      renderItem={renderItem}
-    />
+    <View style={styles.container}>
+      {renderLabel()}
+      <FlatList
+        ref={listRef}
+        showsVerticalScrollIndicator={false}
+        keyExtractor={keyExtractor}
+        data={data}
+        renderItem={renderItem}
+      />
+    </View>
   );
 };
 
-const propsAreEqual = (prevProps: PropsType, nextProps: PropsType) =>
-  JSON.stringify(prevProps) === JSON.stringify(nextProps);
-
-export default memo(LeaderList, propsAreEqual);
+export default memo(LeaderList);

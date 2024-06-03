@@ -1,21 +1,23 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {Keyboard} from 'react-native';
 import {useDispatch, useSelector} from '@store/hooks';
 import {setUsers, searchUser} from '@store/actions';
 import {AppState} from '@types';
 import {UserData} from '@constants/UserData';
 import Modal from 'react-native-modal';
-import {Keyboard} from 'react-native';
+import {LABELS_DATA} from '@constants/LabelData';
+import {SORT_ORDER} from '@constants/Filter';
 
 const useHome = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [sortCriteria, setSortCriteria] = useState<LABELS_DATA>(
+    LABELS_DATA.RANK,
+  );
+  const [sortOrder, setSortOrder] = useState<SORT_ORDER>(SORT_ORDER.DESC);
   const dispatch = useDispatch();
   const users = useSelector((state: AppState) => state.users);
   const searchedUser = useSelector((state: AppState) => state.searchedUser);
   const modalRef = useRef<Modal | null>(null);
-
-  useEffect(() => {
-    dispatch(setUsers(UserData));
-  }, [dispatch]);
 
   const handleSearch = useCallback(() => {
     Keyboard.dismiss();
@@ -40,35 +42,82 @@ const useHome = () => {
     [dispatch],
   );
 
-  const rankedUsers = useMemo(() => {
-    return Object.values(users)
-      .sort((a, b) => b.bananas - a.bananas)
-      .map((user, index) => ({
-        ...user,
-        rank: index + 1,
-      }));
-  }, [users]);
+  const sortUsers = useCallback(
+    (criteria?: LABELS_DATA) => {
+      const initialUsers = [...Object.values(UserData)];
+      let sorted = users.length ? users : initialUsers;
+
+      switch (criteria ?? sortCriteria) {
+        case LABELS_DATA.NAME:
+          sorted.sort((a, b) =>
+            sortOrder === SORT_ORDER.ASC
+              ? a.name.localeCompare(b.name)
+              : b.name.localeCompare(a.name),
+          );
+          break;
+        default:
+          sorted.sort((a, b) =>
+            sortOrder === SORT_ORDER.ASC
+              ? a.bananas - b.bananas
+              : b.bananas - a.bananas,
+          );
+      }
+
+      if (!users.length) {
+        sorted = sorted.map((user, index) => ({
+          ...user,
+          rank: index + 1,
+        }));
+      }
+
+      dispatch(setUsers(sorted));
+    },
+    [users, dispatch, sortCriteria, sortOrder],
+  );
+
+  useEffect(() => {
+    sortUsers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const topUsers = useMemo(() => {
     if (!searchedUser) {
-      return rankedUsers;
+      return users;
     }
 
-    const top10Users = rankedUsers.slice(0, 10);
-    const searchedUserData = rankedUsers.find(
+    const top10Users = users.slice(0, 10);
+    const searchedUserData = users.find(
       user => user.name.toLowerCase() === searchedUser?.toLowerCase(),
     );
 
     if (searchedUserData) {
-      const searchedUserRank = searchedUserData.rank;
+      const isSearchedUserInTop10 = top10Users.some(
+        user => user.name.toLowerCase() === searchedUserData.name.toLowerCase(),
+      );
 
-      if (searchedUserRank > 10) {
+      if (!isSearchedUserInTop10) {
         top10Users[top10Users.length - 1] = searchedUserData;
       }
     }
 
     return top10Users;
-  }, [rankedUsers, searchedUser]);
+  }, [searchedUser, users]);
+
+  const handleSortList = useCallback(
+    (label: LABELS_DATA) => {
+      dispatch(searchUser(''));
+      if (sortCriteria === label) {
+        setSortOrder(prevOrder =>
+          prevOrder === SORT_ORDER.ASC ? SORT_ORDER.DESC : SORT_ORDER.ASC,
+        );
+      } else {
+        setSortCriteria(label);
+        setSortOrder(SORT_ORDER.ASC);
+      }
+      sortUsers(label);
+    },
+    [sortUsers, sortCriteria, dispatch],
+  );
 
   return {
     modalRef,
@@ -77,6 +126,7 @@ const useHome = () => {
     searchQuery,
     handleSearch,
     handleSearchInput,
+    handleSortList,
   };
 };
 

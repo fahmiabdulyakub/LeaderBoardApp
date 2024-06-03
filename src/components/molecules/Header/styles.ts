@@ -7,7 +7,6 @@ export default StyleSheet.create({
     backgroundColor: Colors.blue,
     padding: 16,
     flexDirection: 'row',
-    marginBottom: 16,
   },
   gap: {
     width: 8,
