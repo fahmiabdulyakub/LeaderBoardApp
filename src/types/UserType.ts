@@ -10,6 +10,6 @@ export interface User {
 }
 
 export interface AppState {
-  users: Record<string, User>;
+  users: User[];
   searchedUser: string | null;
 }
