@@ -1,12 +1,12 @@
 import {ACTION_TYPES} from '@constants/ActionTypes';
 import {User} from '@types';
 
-interface SetUsersAction {
+export interface SetUsersAction {
   type: ACTION_TYPES.SET_USERS;
   users: User[];
 }
 
-interface SearchUserAction {
+export interface SearchUserAction {
   type: ACTION_TYPES.SEARCH_USER;
   username: string;
 }
